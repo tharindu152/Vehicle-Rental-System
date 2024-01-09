@@ -6,46 +6,51 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalSoftwareSystem20231753
 {
-    internal class Schedule
+    internal class Schedule : IComparable<Schedule>
     {
-        private DateTime pickupDate;        
-        private DateTime dropoffDate;
+        private DateTime pickUpDate;        
+        private DateTime dropOffDate;
 
         public Schedule()
-        {                       
+        {       
 
         }
 
-        public Schedule(DateTime pickupDate, DateTime dropoffDate)
+        public Schedule(DateTime pickupDate, DateTime dropOffDate)
         {
-            this.pickupDate = pickupDate;
-            this.dropoffDate = dropoffDate;
+            this.pickUpDate = pickupDate;
+            this.dropOffDate = dropOffDate;
         }
 
-        public void SetpickupDate(DateTime pickupDate)
+        public void SetPickUpDate(DateTime pickUpDate)
         {
-            this.pickupDate = pickupDate;
+            this.pickUpDate = pickUpDate;
         }
 
-        public DateTime GetPickupDate()
+        public DateTime GetPickUpDate()
         {
-            return pickupDate;
+            return pickUpDate;
         }
 
-        public void SetDropoffDate(DateTime dropoffDate)
+        public void SetDropOffDate(DateTime dropOffDate)
         {
-            this.dropoffDate = dropoffDate;
+            this.dropOffDate = dropOffDate;
         }
 
-        public DateTime GetDropoffDate()
+        public DateTime GetDropOffDate()
         {
-            return dropoffDate;
+            return dropOffDate;
         }
 
 
-        public override string? ToString()
+        public override string ToString()
         {
-            return pickupDate.ToShortDateString() + " to " + dropoffDate.ToShortDateString();
+            return $"From {this.pickUpDate.ToShortDateString()} to {this.dropOffDate.ToShortDateString()}";
+        }
+
+        public int CompareTo(Schedule? other)
+        {
+            return this.pickUpDate.CompareTo(other?.GetPickUpDate());
         }
     }
 }
