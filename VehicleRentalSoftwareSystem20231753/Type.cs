@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalSoftwareSystem20231753
 {
+    //Enumeration types for four vehicle types
     internal enum Type
     {
         VAN,

@@ -9,16 +9,19 @@ namespace VehicleRentalSoftwareSystem20231753
 {
     internal class Driver
     {
+        //Attributes of the driver
         private string name;
         private string surname;
         private DateTime dateOfBirth;
         private string licenseNumber;
 
+        //No argument constructor
         public Driver()
         {
 
         }
 
+        //All argument constructor
         public Driver(string name, string surname, DateTime dateOfBirth, string licenseNumber)
         {
             this.name = name;
@@ -27,49 +30,45 @@ namespace VehicleRentalSoftwareSystem20231753
             this.licenseNumber = licenseNumber;
         }
 
-        public void setName(string name)
+        public void SetName(string name)
         {
             this.name = name;
         }
 
-        public string getName()
+        public string GetName()
         {
             return this.name;
         }
 
-        public void setSurname(string surname)
+        public void SetSurname(string surname)
         {
             this.surname = surname;
         }
 
-        public string getSurname()
+        public string GetSurname()
         {
             return this.surname;
         }
 
-        public void setDateOfBirth(DateTime dateOfBirth)
+        public void SetDateOfBirth(DateTime dateOfBirth)
         {
             this.dateOfBirth = dateOfBirth;
         }
 
-        public DateTime getDateOfBirth()
+        public DateTime GetDateOfBirth()
         {
             return this.dateOfBirth;
         }
 
-        public void setLicenseNumber(string licenseNumber)
+        public void SetLicenseNumber(string licenseNumber)
         {
             this.licenseNumber = licenseNumber;
         }
 
-        public string getLicenseNumber()
+        public string GetLicenseNumber()
         {
             return this.licenseNumber;
         }
 
-        public override string? ToString()
-        {
-            return base.ToString();
-        }
     }
 }

@@ -1,53 +1,34 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VehicleRentalSoftwareSystem20231753
 {
     internal class WestminsterRentalVehicle
     {
         private static Customer customer = new Customer();
-        private static Admin admin = new Admin();   
+        private static Admin admin = new Admin();
+        
+        
         static void Main(string[] args)
         {
-            Car toyota = new Car(Type.CAR, "C-001", "Toyota", "Axio", 250.50, new List<Schedule>());
-            Van petrol = new Van(Type.VAN, "C-002", "Nissan", "Petrol", 2750.50, new List<Schedule>());
-            ElectricCar leaf = new ElectricCar(Type.ELECTRIC_CAR, "C-003", "Nissan", "Leaf", 4550.50, new List<Schedule>());
-            Motorbike ct100 = new Motorbike(Type.MOTORBIKE, "C-004", "Bajaj", "CT100", 3250.50, new List<Schedule>());
-            Car wagonr = new Car(Type.CAR, "C-005", "Suzuki", "wagonR", 1250.50, new List<Schedule>());
-            Van highroof = new Van(Type.VAN, "C-006", "Toyota", "High Roof", 2950.50, new List<Schedule>());
-            ElectricCar tesla = new ElectricCar(Type.ELECTRIC_CAR, "C-007", "Tesla", "tesla", 8250.50, new List<Schedule>());
-            Motorbike kawasaki = new Motorbike(Type.MOTORBIKE, "C-008", "Suzuki", "Kawasaki", 2750.50, new List<Schedule>());
+            //Display console title
+            Console.Title = $"Westminster Vehicle Rental Service";
 
-            VehicleDB.vehiclePool.Add("C-001", toyota);
-            VehicleDB.vehiclePool.Add("C-002", petrol);
-            VehicleDB.vehiclePool.Add("C-003", leaf);
-            VehicleDB.vehiclePool.Add("C-004", ct100);
-            VehicleDB.vehiclePool.Add("C-005", wagonr);
-            VehicleDB.vehiclePool.Add("C-006", highroof);
-            VehicleDB.vehiclePool.Add("C-007", tesla);
-            VehicleDB.vehiclePool.Add("C-008", kawasaki);
-
-            leaf.GetSchedules().Add(new Schedule( DateTime.Parse("03/24/2024"), DateTime.Parse("03/26/2024")));
-            leaf.GetSchedules().Add(new Schedule(DateTime.Parse("03/20/2024"), DateTime.Parse("03/22/2024")));
-            ct100.GetSchedules().Add(new Schedule(DateTime.Parse("03/04/2024"), DateTime.Parse("03/06/2024")));
-            wagonr.GetSchedules().Add(new Schedule(DateTime.Parse("04/24/2024"), DateTime.Parse("04/26/2024")));
-            wagonr.GetSchedules().Add(new Schedule(DateTime.Parse("04/04/2024"), DateTime.Parse("04/06/2024")));
-            tesla.GetSchedules().Add(new Schedule(DateTime.Parse("03/14/2024"), DateTime.Parse("03/16/2024")));
-
-            ShowCustomerMenu();
-            /*Console.WriteLine(DateTime.Today);*/
-            /*Console.Write("Please enter the pick up date. Eg- 01/09/2024 : ");
-            DateTime pickUpDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine(pickUpDate.ToShortDateString());*/
-
-
+            //Start the application by displaying customer menu
+            ShowCustomerMenu();            
         }
 
+        //Display customer menu
         public static void ShowCustomerMenu()
         {
             DateTime pickUpDate;
             DateTime dropOffDate;            
             Schedule schedule;
+            Random random = new Random();
 
+            //Options for customer
             CreateTopic("Customer Menu" , ConsoleColor.Green);            
             Console.Write("Options: \n" +
                               "1) List Available Vehicles\n" +
@@ -59,50 +40,71 @@ namespace VehicleRentalSoftwareSystem20231753
             
             try {
                 int option = Convert.ToInt32(Console.ReadLine());
+                //switch to a selected option by the customer
                 switch (option) {
-                    
+                    //To list the information of vehicles of a given type that are available on a specific wantedSchedule
                     case 1:
-                                                
+                        CreateTopic("List Available Vehicles", ConsoleColor.Green);
+                        //Get the requested schedule from customer
                         Console.Write("Please enter the pick up date. format:- MM/dd/yyyy : ");
                         pickUpDate = DateTime.Parse(Console.ReadLine());
                         Console.Write("Please enter the drop off date. format:- MM/dd/yyyy : ");
                         dropOffDate = DateTime.Parse(Console.ReadLine());
                         
+                        //Validate the pick up date and drop off date
                         if (pickUpDate < dropOffDate && !(DateTime.Now > pickUpDate)) {
-                            schedule = new Schedule(pickUpDate, dropOffDate);
-                            Console.Write("Vehicle types available: \n" +
+                            
+                            Type vehicleType = 0;
+
+                            label1:
+                            bool flag = true;
+                            while (flag) {
+                                flag = false;
+                                //Get the requested vehicle type from customer
+                                Console.Write("Vehicle types available: \n" +
                                                   "1) Van\n" +
                                                   "2) Car\n" +
                                                   "3) Electric Car\n" +
                                                   "4) Motorbike\n\n" +
                                                   "Please select an option between 1 to 4: ");
 
-                            int type = Convert.ToInt32(Console.ReadLine());
-                            Type vehicleType = 0;
-                            switch (type) {
-                                case 1:
-                                    vehicleType = Type.VAN;
-                                    break;
-                                case 2:
-                                    vehicleType = Type.CAR;
-                                    break;
-                                case 3:
-                                    vehicleType = Type.ELECTRIC_CAR;
-                                    break;
-                                case 4:
-                                    vehicleType = Type.MOTORBIKE;
-                                    break;
-                                default:
-                                    Console.WriteLine("Please select the correct vehicle type..");
-                                    break;
+                                int type = Convert.ToInt32(Console.ReadLine());
+
+                                switch (type) {
+                                    case 1:
+                                        vehicleType = Type.VAN;
+                                        break;
+                                    case 2:
+                                        vehicleType = Type.CAR;
+                                        break;
+                                    case 3:
+                                        vehicleType = Type.ELECTRIC_CAR;
+                                        break;
+                                    case 4:
+                                        vehicleType = Type.MOTORBIKE;
+                                        break;
+                                    default:
+                                        Console.WriteLine("\nInvalid Vehicle type. Please select an option between 1 to 4");
+                                        //If selecting a vehicle type is failed, code execution will restart from label1
+                                        goto label1;
+                                }
                             }
+                            //Select a driver for the schedule. For testing purposes selection is made randomly. Driver selection algorithm is yet to be implemented.
+                            int driver = random.Next(0, 4);
+                            //Assign a driver to the schedule
+                            schedule = new Schedule(pickUpDate, dropOffDate, RentalServiceDB.drivers[driver]);
+
+                            //List available vehicles for the given schedule
                             customer.ListAvailableVehicles(schedule, vehicleType);
                             Console.WriteLine("\nPlease enter to continue...");
                             Console.ReadLine();
+
+                        //Display a message if pickup date is a past date
                         } else if (DateTime.Now > pickUpDate) {
                             Console.WriteLine("Your pickup date should not be a past date");
                             Console.WriteLine("\nPlease enter to continue...");
                             Console.ReadLine();
+                        //Display a message if pick up date is later than drop off date
                         } else if (pickUpDate > dropOffDate) {
                             Console.WriteLine("Your pickup date should be earlier than drop off date");
                             Console.WriteLine("\nPlease enter to continue...");
@@ -111,44 +113,75 @@ namespace VehicleRentalSoftwareSystem20231753
                         
                         ShowCustomerMenu();                       
                         break;
-                    
+
+                    //To make a reservation for a Vehicle
                     case 2:
-                        CreateTopic("Rent a Vehicle", ConsoleColor.Green);
+                        label2:
+                        CreateTopic("Add Reservation", ConsoleColor.Green);
+                        //Get the requested vehicle registration number from customer
                         Console.Write("Please enter the registration number of the vehicle: ");
                         string registrationNumber = Console.ReadLine();
+                        //Get the requested schedule from customer
                         Console.Write("Please enter the pick up date. format:- MM/dd/yyyy: ");
                         pickUpDate = DateTime.Parse(Console.ReadLine());
                         Console.Write("Please enter the drop off date. format:- MM/dd/yyyy: ");
                         dropOffDate = DateTime.Parse(Console.ReadLine());
 
+                        //Validate the pick up date and drop off date
                         if (pickUpDate < dropOffDate && !(DateTime.Now > pickUpDate)) {
-                            schedule = new Schedule(pickUpDate, dropOffDate);
+                            //Select a driver for the schedule. For testing purposes driver selection is made randomly. Driver selection algorithm is yet to be implemented.
+                            int driver = random.Next(0, 4);
+                            //Assign a driver to the schedule
+                            schedule = new Schedule(pickUpDate, dropOffDate, RentalServiceDB.drivers[driver]);
+
+                            //Validate whether registration number is null or white spaces
                             if (!string.IsNullOrWhiteSpace(registrationNumber)) {
+                                //Add the reservation
                                 bool isRented = customer.AddReservation(registrationNumber, schedule);
                                 if (isRented) {
-                                    Console.WriteLine("The vehicle has been scheduled..");
-                                    
+                                    Console.WriteLine("The vehicle has been scheduled.");
+                                    Console.WriteLine($"The driver assigned to your vehicle is {RentalServiceDB.drivers[driver].GetName()} {RentalServiceDB.drivers[driver].GetSurname()}.");
+
                                 } else {
-                                    Console.WriteLine("");
+                                    Console.WriteLine("\nPlease enter to continue...");
+                                    Console.ReadLine();
+                                    //If adding reservation is failed, code execution will restart from label2
+                                    goto label2;
                                 }
+                            //Display message if registration number is null or white spaces
                             } else {
-                                Console.WriteLine("Please enter a valid registration number");                                
+                                Console.WriteLine("Please enter a valid registration number");
+                                Console.WriteLine("\nPlease enter to continue...");
+                                Console.ReadLine();
+                                goto label2;
                             }
+                        //Display a message if pickup date is a past date
                         } else if (DateTime.Now > pickUpDate) {
-                            Console.WriteLine("Your pickup date should not be a past date");                            
+                            Console.WriteLine("Your pickup date should not be a past date");
+                            //If adding reservation is failed, code execution will restart from label2
+                            goto label2;
+
+                        //Display a message if pick up date is later than drop off date
                         } else if (pickUpDate > dropOffDate) {
-                            Console.WriteLine("Your pickup date should be earlier than drop off date");                            
+                            Console.WriteLine("Your pickup date should be earlier than drop off date");
+                            //If adding reservation is failed, code execution will restart from label2
+                            goto label2;
                         }
 
                         Console.WriteLine("\nPlease enter to continue...");
                         Console.ReadLine();
                         ShowCustomerMenu();
                         break;
-                    
+
+                    // To modify the start and/or end date of an existing reservation for the vehicle identified by registration number
                     case 3:
+                        label3:
                         CreateTopic("Change Reservation", ConsoleColor.Green);
+                        //Get the requested vehicle registration number from customer
                         Console.Write("Please enter the registration number of the vehicle: ");
                         string regNumber = Console.ReadLine();
+
+                        //Get the requested old and new schedules from customer
                         Console.Write("Please enter the old pick up date. format:- MM/dd/yyyy: ");
                         DateTime pickUpDateOld = DateTime.Parse(Console.ReadLine());
                         Console.Write("Please enter the old drop off date. format:- MM/dd/yyyy: ");
@@ -156,57 +189,98 @@ namespace VehicleRentalSoftwareSystem20231753
                         Console.Write("Please enter the new pick up date. format:- MM/dd/yyyy: ");
                         DateTime pickUpDateNew = DateTime.Parse(Console.ReadLine());
                         Console.Write("Please enter the new drop off date. format:- MM/dd/yyyy: ");
-                        DateTime dropOffDateNew = DateTime.Parse(Console.ReadLine());                
+                        DateTime dropOffDateNew = DateTime.Parse(Console.ReadLine());
 
+                        //Validate the pick up date and drop off date
                         if (pickUpDateOld < dropOffDateOld && pickUpDateNew < dropOffDateNew && !(DateTime.Now > pickUpDateNew)) {
-                            Schedule scheduleOld = new Schedule(pickUpDateOld, dropOffDateOld);
-                            Schedule scheduleNew = new Schedule(pickUpDateNew, dropOffDateNew);
+                            //Select a driver for the schedule. For testing purposes selection is made randomly. Driver selection algorithm is yet to be implemented.
+                            int driver = random.Next(0, 4);
+                            //Assign a driver to the schedules
+                            Schedule scheduleOld = new Schedule(pickUpDateOld, dropOffDateOld, RentalServiceDB.drivers[driver]);
+                            Schedule scheduleNew = new Schedule(pickUpDateNew, dropOffDateNew, RentalServiceDB.drivers[driver]);
+
+                            //Validate whether registration number is null or white spaces
                             if (!string.IsNullOrWhiteSpace(regNumber)) {
+                                //Chane the reservation
                                 bool isChanged = customer.ChangeReservation(regNumber, scheduleOld, scheduleNew);
                                 if (isChanged) {
-                                    Console.WriteLine("The schedule has been updated..");
+                                    Console.WriteLine("The schedule has been updated");
+                                    Console.WriteLine($"The new driver assigned to your vehicle is {RentalServiceDB.drivers[driver].GetName()} {RentalServiceDB.drivers[driver].GetSurname()}.");
                                 } else {
                                     Console.WriteLine("");
+                                    //If changing reservation is failed, code execution will restart from label3
+                                    goto label3;
                                 }
+                            //Display message if registration number is null or white spaces
                             } else {
                                 Console.WriteLine("Please enter a valid registration number");
+                                //If changing reservation is failed, code execution will restart from label3
+                                goto label3;
                             }
+                           
+                        //Display a message if pickup dates are past dates
                         } else if (DateTime.Now > pickUpDateOld && DateTime.Now > pickUpDateNew) {
                             Console.WriteLine("Your pickup dates should not be a past dates");
+                            //If changing reservation is failed, code execution will restart from label3
+                            goto label3;
+
+                        //Display a message if pick up dates are later than respective drop off dates
                         } else if (pickUpDateOld > dropOffDateOld && pickUpDateNew > dropOffDateNew) {
                             Console.WriteLine("Your pickup dates should be earlier than respective drop off dates");
+                            //If changing reservation is failed, code execution will restart from label3
+                            goto label3;
                         }
 
                         Console.WriteLine("\nPlease enter to continue...");
-                        Console.ReadLine();
+                        Console.ReadLine();  
                         ShowCustomerMenu();
                         break;
 
+                    // To delete an existing reservation for a vehicle identified by number on a given schedule
                     case 4:
+                        label4:
                         CreateTopic("Delete Reservation", ConsoleColor.Green);
+                        //Get the requested vehicle registration number from customer
                         Console.Write("Please enter the registration number of the vehicle: ");
                         registrationNumber = Console.ReadLine();
+                        //Get the requested schedule from customer
                         Console.Write("Please enter the pick up date. format:- MM/dd/yyyy: ");
                         pickUpDate = DateTime.Parse(Console.ReadLine());
                         Console.Write("Please enter the drop off date. format:- MM/dd/yyyy: ");
-                        dropOffDate = DateTime.Parse(Console.ReadLine());                    
+                        dropOffDate = DateTime.Parse(Console.ReadLine());
 
+                        //Validate the pick up date and drop off date
                         if (pickUpDate < dropOffDate && !(DateTime.Now > pickUpDate)) {
-                            schedule = new Schedule(pickUpDate, dropOffDate);
+                            //Select a driver for the schedule. For testing purposes selection is made randomly. Driver selection algorithm is yet to be implemented.
+                            int driver = random.Next(0, 4);
+                            //Assign a driver to the schedule
+                            schedule = new Schedule(pickUpDate, dropOffDate, RentalServiceDB.drivers[driver]);
+                            //Validate whether registration number is null or white spaces
                             if (!string.IsNullOrWhiteSpace(registrationNumber)) {
+                                //Delete the reservation
                                 bool isDeleted = customer.DeleteReservation(registrationNumber, schedule);
                                 if (isDeleted) {
-                                    Console.WriteLine("The schedule has been deleted..");
+                                    Console.WriteLine("The schedule has been deleted");
                                 } else {
                                     Console.WriteLine("");
+                                    //If deleting reservation is failed, code execution will restart from label4
+                                    goto label4;
                                 }
                             } else {
                                 Console.WriteLine("Please enter a valid registration number");
+                                //If deleting reservation is failed, code execution will restart from label4
+                                goto label4;
                             }
+                            
+                        //Display a message if pickup date is a past date
                         } else if (DateTime.Now > pickUpDate) {
                             Console.WriteLine("Your pickup dates should not be a past dates");
+                            goto label4;
+
+                        //Display a message if pick up date is later than drop off date
                         } else if (pickUpDate > dropOffDate) {
                             Console.WriteLine("Your pickup dates should be earlier than respective drop off dates");
+                            goto label4;
                         }
 
                         Console.WriteLine("\nPlease enter to continue...");
@@ -214,22 +288,27 @@ namespace VehicleRentalSoftwareSystem20231753
                         ShowCustomerMenu();
                         break;
 
+                    // To access the admin menu
                     case 5:
                         ShowAdminMenu();
                         break;
 
                     default:
+                        //If invalid response is selected, customer menu will display again
                         Console.WriteLine("Please select a number from 1 to 5");
                         Console.WriteLine("\nPlease enter to continue...");
                         Console.ReadLine();
+                        ShowCustomerMenu();
                         break;
                 }
-            } catch (Exception e) {
+            } 
+            //Handles exceptions of the entire menu
+            catch (Exception e)
+            {
                 Console.WriteLine(e.Message);
                 Console.WriteLine("\nPlease enter to continue...");
                 Console.ReadLine();
                 ShowCustomerMenu();
-
             }
         }
 
@@ -239,10 +318,12 @@ namespace VehicleRentalSoftwareSystem20231753
             bool invalid = true;
 
             outer:
+            //Admin menu options will loop until integer value is entered
             while (invalid) {
                 invalid = false;
                 try {
-                    CreateTopic("Admin Menu");
+                    CreateTopic("Admin Menu", ConsoleColor.Blue);
+                    //Options for admin
                     Console.Write("Options: \n" +
                                       "1) Add a vehicle\n" +
                                       "2) Delete a vehicle\n" +
@@ -253,7 +334,7 @@ namespace VehicleRentalSoftwareSystem20231753
                                       "Please select an option between 1 to 6: ");
                     
                     option = Convert.ToInt32(Console.ReadLine());
-
+                //Any exception will be handled here
                 } catch (Exception ex) {
                     Console.WriteLine(ex.Message + " Please try again.");
                     invalid = true;
@@ -261,22 +342,29 @@ namespace VehicleRentalSoftwareSystem20231753
             }
             
             switch (option) {
+                // To add a new vehicle into the rental system
                 case 1:
+                    CreateTopic("Add a vehicle", ConsoleColor.Blue);
                     invalid = true;
                     int type = 0;
                     Vehicle vehicle = null;
                 
                     inner:
+                    //Vehicle type selection will loop until integer value is entered
                     while (invalid) {
                         invalid = false;
                         try {
-                            if (VehicleDB.allocatedParkingSlots >= VehicleDB.MAX_PARKING_SLOTS) {
+                            //Validate whether there are any parking slots remaining to add vehicles
+                            if (RentalServiceDB.allocatedParkingSlots >= RentalServiceDB.MAX_PARKING_SLOTS) {
+                                //Display a message if all parking slots are occupied
                                 Console.WriteLine("\nCan not add the vehicles. All parking slots are occupied");
                                 Console.WriteLine("\nPlease enter to continue...");
                                 Console.ReadLine();
                                 ShowAdminMenu();
                             } else {
-                                CreateTopic("Add Vehicle");
+                                CreateTopic("Add Vehicle", ConsoleColor.Blue);
+
+                                //Get the requested vehicle type from admin
                                 Console.Write("Vehicle Types: \n" +
                                                   "1) Van\n" +
                                                   "2) Car\n" +
@@ -285,8 +373,10 @@ namespace VehicleRentalSoftwareSystem20231753
                                                   "Please select an option between 1 to 4: ");
 
                                 type = Convert.ToInt32(Console.ReadLine());
-                            }                            
-                        } catch(Exception ex) {
+                            }
+
+                        //Any exception will be handled here
+                        } catch (Exception ex) {
                             Console.WriteLine(ex.Message + " Please try again.");
                             invalid = true;
                         }
@@ -306,20 +396,29 @@ namespace VehicleRentalSoftwareSystem20231753
                             default:
                                 invalid = true;
                                 Console.WriteLine("Please select an option between 1 to 4");
+                                //If invalid vehicle type is selected code execution will restart from label inner
                                 goto inner;
                         }
                     }
 
+                    //Check whether the vehicle is created or null
                     if (vehicle != null) {
+                        //Add vehicle to the vehicle pool
                         bool created = admin.AddVehicle(vehicle);
-                        if (!created && VehicleDB.allocatedParkingSlots < VehicleDB.MAX_PARKING_SLOTS) {
+
+                        //if vehicle is not added to the pool properly and there are parking slots remaining.
+                        //Restart code execution from label inner
+                        if (!created && RentalServiceDB.allocatedParkingSlots < RentalServiceDB.MAX_PARKING_SLOTS) {
                             goto inner;
-                        }else if(!created && VehicleDB.allocatedParkingSlots >= VehicleDB.MAX_PARKING_SLOTS) {
+
+                        //if vehicle is not added to the pool properly and there are no parking slots remaining.
+                        //Restart code execution from label outer
+                        } else if(!created && RentalServiceDB.allocatedParkingSlots >= RentalServiceDB.MAX_PARKING_SLOTS) {
                             option = 0;
                             invalid = true;
                             goto outer;
                         }
-
+                    //if vehicle is not created properly, restart code execution from label inner
                     } else {
                         goto inner;
                     }
@@ -330,13 +429,16 @@ namespace VehicleRentalSoftwareSystem20231753
 
                     break;
 
-                // getting user input ( registration number) to delete the vehicle
+                // To delete a vehicle identified by number from the system
                 case 2:
-                    CreateTopic("Delete Vehicle");
+                    CreateTopic("Delete a Vehicle", ConsoleColor.Blue);
+                    //Get the requested vehicle registration number from admin
                     Console.Write("Please enter the registration number of the vehicle to delete: ");
                     try {
                         string registrationNumber = Console.ReadLine();
-                        if (registrationNumber != null) admin.DeleteVehicle(registrationNumber);
+                        //Validate whether registration number is null or white spaces before deleting the vehicle
+                        if (!string.IsNullOrWhiteSpace(registrationNumber)) admin.DeleteVehicle(registrationNumber);
+                    //Any exception will be handled here
                     } catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
@@ -345,32 +447,35 @@ namespace VehicleRentalSoftwareSystem20231753
                     ShowAdminMenu();
                     break;
 
-                // this method just list the vehicle by looping the Dictionary
+                // To print a list of the vehicles in the system.
                 case 3:
-                    CreateTopic("List Vehicles");
+                    CreateTopic("List Vehicles", ConsoleColor.Blue);
                     admin.ListVehicles();
                     Console.WriteLine("\nPlease enter to continue...");
                     Console.ReadLine();
                     ShowAdminMenu();
                     break;
 
-                // list vehicles according to the make in ascending order
+                // To print a list of the vehicles ordered alphabetically according to the vehicle Make
                 case 4:
-                    CreateTopic("List Ordered Vehicles");
+                    CreateTopic("List Sorted Vehicles", ConsoleColor.Blue);
                     admin.ListOrderedVehicles();
                     Console.WriteLine("\nPlease enter to continue...");
                     Console.ReadLine();
                     ShowAdminMenu();
                     break;
 
-                // generation a report. as user input this method first gets file name from the user
+                // To save the current list of vehicles with their complete related information to a text file
                 case 5:
-                    CreateTopic("Generate Report");
+                    CreateTopic("Generate Vehicle Report", ConsoleColor.Blue);
+                    //Get the requested file name for the report from admin
                     Console.Write("Please enter a file name for the report: ");
 
                     try {
                         string fileName = Console.ReadLine();
-                        if(fileName != null) admin.GenerateReport(fileName);
+                        //Validate whether filename is null or white spaces before passing it to generate report
+                        if (!string.IsNullOrWhiteSpace(fileName)) admin.GenerateReport(fileName);
+                    //Any exception will be handled here
                     } catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }  
@@ -380,12 +485,12 @@ namespace VehicleRentalSoftwareSystem20231753
                     ShowAdminMenu();
                     break;
 
-                // go back to the customer menu
+                // To access the customer menu
                 case 6:
                     ShowCustomerMenu();
                     break;
 
-                // if the given user input is wrong to select function. this default method will run
+                //If invalid option is selected admin menu will load again
                 default:
                     Console.WriteLine("Please select a number from 1 to 6");
                     Console.WriteLine("\nPlease enter to continue...");
@@ -394,16 +499,20 @@ namespace VehicleRentalSoftwareSystem20231753
             }
         }
 
+        //Helper method to create a Vehicle of any type
         private static Vehicle? CreateVehicle(int type)
         {
             string registrationNumber = "";
             string make = "";
             string model = "";
+            int batteryPercentage = 0;
             double rent = 0.0;
 
+            //Get vehicle details from admin
             Console.WriteLine("\nPlease enter following details of the vehicle");
 
             bool flag = true;
+            //loop will be executed until valid inputs are given
             while(flag) {
                 flag = false;
                 try {
@@ -413,16 +522,24 @@ namespace VehicleRentalSoftwareSystem20231753
                     make = Console.ReadLine();
                     Console.Write("Model of the vehicle: ");
                     model = Console.ReadLine();
+                    //Battery percentage is requested only for the Electric Vehicle
+                    if (type == 3) {
+                        Console.Write("Battery percentage: ");
+                        batteryPercentage = int.Parse(Console.ReadLine());
+                    }
                     Console.Write("Daily rental price: LKR ");
                     rent = double.Parse(Console.ReadLine());
+                //Any exceptions will be handled here    
                 } catch (Exception ex) {
                     Console.WriteLine(ex.Message + " Please try again.\n");
                     flag = true;
                 }
             }                       
 
+            //An empty schedules list will be added to every vehicle when their instance is created
             List<Schedule> schedules = new List<Schedule>();
 
+            //Validate whether the registration number, make, model is null or white spaces
             if (!string.IsNullOrWhiteSpace(registrationNumber) && !string.IsNullOrWhiteSpace(make) && !string.IsNullOrWhiteSpace(model)) {
                 switch (type) {
                     case 1:
@@ -432,7 +549,7 @@ namespace VehicleRentalSoftwareSystem20231753
                         return new Car(Type.CAR, registrationNumber, make, model, rent, schedules);
 
                     case 3:
-                        return new ElectricCar(Type.ELECTRIC_CAR, registrationNumber, make, model, rent, schedules);
+                        return new ElectricCar(Type.ELECTRIC_CAR, registrationNumber, make, model, rent, schedules, batteryPercentage);
 
                     case 4:
                         return new Motorbike(Type.MOTORBIKE, registrationNumber, make, model, rent, schedules);
@@ -443,26 +560,17 @@ namespace VehicleRentalSoftwareSystem20231753
                 Console.WriteLine("\nPlease enter a valid input.");
             }
 
+            //Null values will be returned from the helper method. Those null values will be handled at the main app logic
             return null;
 
         }
 
-        private static void CreateTopic(string topic)
-        {
-            Console.Clear();
-            Console.WriteLine("\x1b[3J");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Title = $"Westminster Rental Vehicle";
-            Console.WriteLine($"- - - {topic} - - -\n");
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
+        //Helper method to display a topic
         private static void CreateTopic(string topic, ConsoleColor color)
         {
             Console.Clear();
             Console.WriteLine("\x1b[3J");
-            Console.ForegroundColor = color;
-            Console.Title = $"Westminster Rental Vehicle";
+            Console.ForegroundColor = color;            
             Console.WriteLine($"- - - {topic} - - -\n");
             Console.ForegroundColor = ConsoleColor.White;
         }

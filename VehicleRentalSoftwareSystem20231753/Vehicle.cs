@@ -6,20 +6,23 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalSoftwareSystem20231753
 {
-    internal class Vehicle : IComparable<Vehicle>
+    internal abstract class Vehicle : IComparable<Vehicle>
     {
+        // Common attributes for all Vehicles
         private Type type;
         private string registrationNumber;
         private string make;
         private string model;
         private double dailyRent;
-        private List<Schedule> schedules;
+        private List<Schedule> schedules;   // schedules attribute will store reservations for a vehicle.
 
+        // No argument constructor
         public Vehicle()
         {
 
         }
 
+        // All argument constructor
         public Vehicle(Type type, string registrationNumber, string make, string model, double dailyRent, List<Schedule> schedules)
         {
             this.type = type;
@@ -90,26 +93,29 @@ namespace VehicleRentalSoftwareSystem20231753
             return schedules;
         }
 
-        // to string method that overridden from super class
+        // ToString() method of Object class overridden 
+        // For each vehicle, information on the registration number, type, make, model, rent, reservations will to be displayed.
         public override string ToString()
         {
-            string vehicleInfo = "Registration number: " + registrationNumber.ToString();
-            vehicleInfo += "\nType: " + type.ToString();
-            vehicleInfo += "\nMake: " + make.ToString();
-            vehicleInfo += "\nModel: " + model.ToString();
-            vehicleInfo += "\nRent per day: LKR " + dailyRent.ToString();
-            vehicleInfo += "\nSchedule: ";
+            string vehicleInfo = "\tRegistration number: " + registrationNumber.ToString();
+            vehicleInfo += "\n\tType: " + type.ToString();
+            vehicleInfo += "\n\tMake: " + make.ToString();
+            vehicleInfo += "\n\tModel: " + model.ToString();
+            vehicleInfo += "\n\tRent per day: LKR " + dailyRent.ToString();
+            vehicleInfo += "\n\tBookings: ";
             if (this.schedules.Count > 0) {
                 schedules.Sort();
                 foreach (Schedule s in schedules) {
-                    vehicleInfo += $"\n\t{s?.ToString()}";
+                    vehicleInfo += $"\n\t\t{s?.ToString()}";
                 }                
-            }
+            }            
             vehicleInfo += "\n";
 
             return vehicleInfo;
         }
 
+        // CompareTo() method of IComparable interface implemented
+        // To order alphabetically according to the vehicle Make
         public int CompareTo(Vehicle? other)
         {
             return this.make.CompareTo(other?.GetMake());
