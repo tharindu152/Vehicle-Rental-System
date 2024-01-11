@@ -13,6 +13,13 @@ namespace VehicleRentalSoftwareSystem20231753
         
         static void Main(string[] args)
         {
+            //Five Drivers are created and added to the RentalServiceDB before initializing the app
+            RentalServiceDB.drivers.Add(new Driver("David", "Costa", DateTime.Parse("03/24/1975"), "12345"));
+            RentalServiceDB.drivers.Add(new Driver("Kamal", "Weththamuni", DateTime.Parse("12/04/1965"), "76445"));
+            RentalServiceDB.drivers.Add(new Driver("Kasun", "Sampath", DateTime.Parse("07/14/1995"), "73642"));
+            RentalServiceDB.drivers.Add(new Driver("Michel", "Thissera", DateTime.Parse("03/24/1975"), "78902"));
+            RentalServiceDB.drivers.Add(new Driver("David", "Costa", DateTime.Parse("08/28/1955"), "62593"));
+
             //Display console title
             Console.Title = $"Westminster Vehicle Rental Service";
 
@@ -158,12 +165,16 @@ namespace VehicleRentalSoftwareSystem20231753
                         //Display a message if pickup date is a past date
                         } else if (DateTime.Now > pickUpDate) {
                             Console.WriteLine("Your pickup date should not be a past date");
+                            Console.WriteLine("\nPlease enter to continue...");
+                            Console.ReadLine();
                             //If adding reservation is failed, code execution will restart from label2
                             goto label2;
 
                         //Display a message if pick up date is later than drop off date
                         } else if (pickUpDate > dropOffDate) {
                             Console.WriteLine("Your pickup date should be earlier than drop off date");
+                            Console.WriteLine("\nPlease enter to continue...");
+                            Console.ReadLine();
                             //If adding reservation is failed, code execution will restart from label2
                             goto label2;
                         }
@@ -207,13 +218,16 @@ namespace VehicleRentalSoftwareSystem20231753
                                     Console.WriteLine("The schedule has been updated");
                                     Console.WriteLine($"The new driver assigned to your vehicle is {RentalServiceDB.drivers[driver].GetName()} {RentalServiceDB.drivers[driver].GetSurname()}.");
                                 } else {
-                                    Console.WriteLine("");
+                                    Console.WriteLine("\nPlease enter to continue...");
+                                    Console.ReadLine();
                                     //If changing reservation is failed, code execution will restart from label3
                                     goto label3;
                                 }
                             //Display message if registration number is null or white spaces
                             } else {
                                 Console.WriteLine("Please enter a valid registration number");
+                                Console.WriteLine("\nPlease enter to continue...");
+                                Console.ReadLine();
                                 //If changing reservation is failed, code execution will restart from label3
                                 goto label3;
                             }
@@ -221,12 +235,16 @@ namespace VehicleRentalSoftwareSystem20231753
                         //Display a message if pickup dates are past dates
                         } else if (DateTime.Now > pickUpDateOld && DateTime.Now > pickUpDateNew) {
                             Console.WriteLine("Your pickup dates should not be a past dates");
+                            Console.WriteLine("\nPlease enter to continue...");
+                            Console.ReadLine();
                             //If changing reservation is failed, code execution will restart from label3
                             goto label3;
 
                         //Display a message if pick up dates are later than respective drop off dates
                         } else if (pickUpDateOld > dropOffDateOld && pickUpDateNew > dropOffDateNew) {
                             Console.WriteLine("Your pickup dates should be earlier than respective drop off dates");
+                            Console.WriteLine("\nPlease enter to continue...");
+                            Console.ReadLine();
                             //If changing reservation is failed, code execution will restart from label3
                             goto label3;
                         }
@@ -262,12 +280,15 @@ namespace VehicleRentalSoftwareSystem20231753
                                 if (isDeleted) {
                                     Console.WriteLine("The schedule has been deleted");
                                 } else {
-                                    Console.WriteLine("");
+                                    Console.WriteLine("\nPlease enter to continue...");
+                                    Console.ReadLine();
                                     //If deleting reservation is failed, code execution will restart from label4
                                     goto label4;
                                 }
                             } else {
                                 Console.WriteLine("Please enter a valid registration number");
+                                Console.WriteLine("\nPlease enter to continue...");
+                                Console.ReadLine();
                                 //If deleting reservation is failed, code execution will restart from label4
                                 goto label4;
                             }
@@ -275,11 +296,15 @@ namespace VehicleRentalSoftwareSystem20231753
                         //Display a message if pickup date is a past date
                         } else if (DateTime.Now > pickUpDate) {
                             Console.WriteLine("Your pickup dates should not be a past dates");
+                            Console.WriteLine("\nPlease enter to continue...");
+                            Console.ReadLine();
                             goto label4;
 
                         //Display a message if pick up date is later than drop off date
                         } else if (pickUpDate > dropOffDate) {
                             Console.WriteLine("Your pickup dates should be earlier than respective drop off dates");
+                            Console.WriteLine("\nPlease enter to continue...");
+                            Console.ReadLine();
                             goto label4;
                         }
 
