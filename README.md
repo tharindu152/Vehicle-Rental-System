@@ -16,4 +16,4 @@ were used in the design and construction of the application. Further, understand
 ### License
 
 Copyright ©️ 2023 Tharindu Thennakoon <br>
-This project is licensed under [MIT License](License.txt)
+This project is licensed under [MIT License](LICENSE.txt)
